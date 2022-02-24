@@ -45,7 +45,12 @@ def export_date(data, filename, type):
     :param type: price, finance
     :return:
     """
-    file_root = '/Users/xudeyan/Desktop/Quant/DeyanQuantDemo/data/' + type + '/' + filename + '.csv '
+
+    # Mac/Linux directory
+    # file_root = '/Users/xudeyan/Desktop/Quant/api/data/' + type + '/' + filename + '.csv'
+
+    # Windows directory
+    file_root = 'E:\\project\\Quant\\api\\data\\' + type + '\\' + filename + '.csv'
     data.to_csv(file_root)
     print("Saved Successful")
 
