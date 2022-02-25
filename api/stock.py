@@ -1,15 +1,18 @@
 # pip install jqdatasdk
 import datetime
-
+import os
 from jqdatasdk import *
 import pandas as pd
-import datetime
 
 # 设置行列不忽略
 pd.set_option('display.max_row', 100000)
 pd.set_option('display.max_columns', 1000)
 
 auth('18888681090', 'Xudeyan0939')  # 账号是申请时所填写的手机号；密码为聚宽官网登录密码
+
+# 全局变量
+mac_root = '/Users/xudeyan/Desktop/Quant/api/data/'
+windows_root = 'E:\\project\\Quant\\api\\data\\'
 
 
 def get_stock_list():
@@ -24,6 +27,7 @@ def get_stock_list():
 def get_single_price(code, time_frequency, start_date, end_date):
     """
     获取单个股票行情数据
+    :rtype: object
     :param code:
     :param time_frequency:
     :param start_date:
@@ -47,12 +51,23 @@ def export_date(data, filename, type):
     """
 
     # Mac/Linux directory
-    # file_root = '/Users/xudeyan/Desktop/Quant/api/data/' + type + '/' + filename + '.csv'
+    file_root = mac_root + type + '/' + filename + '.csv'
 
     # Windows directory
-    file_root = 'E:\\project\\Quant\\api\\data\\' + type + '\\' + filename + '.csv'
-    data.to_csv(file_root)
+    # file_root = windows_root + type + '\\' + filename + '.csv'
+    if os.path.exists(file_root):
+        data.to_csv(file_root, mode='a', header=False)
+    else:
+        # 判断一下file是否存在 > 存在：追加/不存在：保持不变
+        data.to_csv(file_root)
+    data.index.names = ['date']
+
     print("Saved Successful")
+
+
+def get_csv_data(code, type):
+    file_root = mac_root + type + '/' + code + '.csv'
+    return pd.read_csv(file_root)
 
 
 def transfer_price_freq(data, time_freq):
@@ -93,5 +108,3 @@ def get_single_valuation(code, date, statDate):
     """
     data = get_fundamentals(query(valuation).filter(valuation.code == code), date=date, statDate=statDate)
     return data
-
-
