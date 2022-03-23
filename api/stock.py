@@ -108,3 +108,14 @@ def get_single_valuation(code, date, statDate):
     """
     data = get_fundamentals(query(valuation).filter(valuation.code == code), date=date, statDate=statDate)
     return data
+
+
+def calculate_change_pct(data):
+    """
+    涨跌幅 = （当期收盘价 - 前期收盘价）/ 前期收盘价
+    当期：分钟，秒钟 天 月
+    :param data: dataframe, 带有收盘价
+    :return: dataframe 带有涨跌幅
+    """
+    data["close_pct"] = (data['close'] - data['close'].shift(1)) / data['close'].shift(1)
+    return data

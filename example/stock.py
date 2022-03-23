@@ -1,45 +1,25 @@
 '''
 @author: deyan
+@desc: 获取价格， 计算涨跌幅
 '''
 
 import api.stock as st
-import time
-from apscheduler.schedulers.blocking import BlockingScheduler
-import logging
-import pandas as pd
 
-LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(filename='mypython.log', level=logging.INFO, format=LOG_FORMAT)
-code = '000001.XSHE'
-
-data = st.get_single_price(code=code,
+# 获取平安银行的行情数据 日K
+data = st.get_single_price(code='000001.XSHE',
                            time_frequency='daily',
-                           start_date='2021-02-26',
-                           end_date='2021-03-15')
+                           start_date='2020-01-01',
+                           end_date='2020-02-01'
+                           )
+# print(data)
+# 计算涨跌幅，验证准确性
+data = st.calculate_change_pct(data)
+# print(data)
 
-#
-# 存入csv
-st.export_date(data=data, filename=code, type='price')
-
-# 从csv中获取数据
-data = st.get_csv_data(code=code, type='price')
+# 获取周K
+data = st.transfer_price_freq(data, 'W')
 print(data)
 
-
-def append_everyday_data():
-    """
-    实时更新数据 假设每天更新 > 存到csv文件里 > data.to_csv(append)
-    :return:
-    """
-    date_time = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-    data_realtime = st.get_single_price(code=code,
-                                        time_frequency='daily',
-                                        start_date=date_time,
-                                        end_date=date_time)
-    st.export_date(data=data_realtime, filename=code, type='price')
-
-#
-# if __name__ == "__main__":
-#     scheduler = BlockingScheduler()
-#     scheduler.add_job(append_everyday_data, 'cron', day='1-31', hour=17)
-#     scheduler.start()
+# 计算涨跌幅
+data = st.calculate_change_pct(data)
+print(data)
