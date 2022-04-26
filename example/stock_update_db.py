@@ -14,16 +14,16 @@ code = '000001.XSHE'
 
 data = st.get_single_price(code=code,
                            time_frequency='daily',
-                           start_date='2021-02-26',
-                           end_date='2021-03-15')
+                           start_date='2012-03-28',
+                           end_date='2022-03-28')
 
 #
 # 存入csv
 st.export_date(data=data, filename=code, type='price')
 
 # 从csv中获取数据
-data = st.get_csv_data(code=code, type='price')
-print(data)
+# data = st.get_csv_data(code=code, type='price')
+print(data.shape)
 
 
 def append_everyday_data():
